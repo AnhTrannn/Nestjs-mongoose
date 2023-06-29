@@ -1,5 +1,5 @@
 import { CatsService } from './cats.service';
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { Cat } from './interfaces/cats.interfaces';
 import { CreateCatDto } from './dto/create-cat.dto';
 
@@ -10,6 +10,14 @@ export class CatsController {
     @Post()
     async create(@Body() createCatDto: CreateCatDto) {
         this.catsService.create(createCatDto);
+    }
+
+    @Put(':id')
+    async edit(
+        @Param('id') id: string,
+        @Body() createCatDto: CreateCatDto
+    ): Promise<Cat> {
+        return this.catsService.edit(id, createCatDto);
     }
     
     @Get()
