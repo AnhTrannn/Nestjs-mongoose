@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { CatsModule } from './cats/cats.module';
-import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { MongooseModule } from '@nestjs/mongoose';
+import { CatsModule } from './modules/cats/cats.module';
 
 @Module({
   imports: [
@@ -11,6 +11,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       useFactory: async (configService: ConfigService) => ({
         uri: configService.get<string>('DATABASE_URI'),
         dbName: configService.get<string>('DATABASE_NAME'),
+        useUnifiedTopology: true,
       }),
       inject: [ConfigService]
     }),

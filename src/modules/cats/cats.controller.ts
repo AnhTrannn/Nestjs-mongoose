@@ -1,13 +1,17 @@
 import { CatsService } from './cats.service';
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { Cat } from './interfaces/cats.interfaces';
 import { CreateCatDto } from './dto/create-cat.dto';
-
+import { GetCatsFilterDto } from './dto/get-cat-filter';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+@ApiTags('cats')
 @Controller('cats')
 export class CatsController {
     constructor(private readonly catsService: CatsService) { }
 
     @Post()
+    @ApiOperation({ summary: 'Create cat' })
+    @ApiResponse({ status: 403, description: 'Forbidden' })
     async create(@Body() createCatDto: CreateCatDto) {
         this.catsService.create(createCatDto);
     }
@@ -21,9 +25,10 @@ export class CatsController {
     }
     
     @Get()
-    async findAll(): Promise<Cat[]> {
-        return this.catsService.findAll();
+    async findAll(@Query() filterDto: GetCatsFilterDto): Promise<Cat[]> {
+        return this.catsService.findAll(filterDto);
     }
+
 
     @Get(':id')
     async findById(@Param('id') id: string): Promise<Cat> {
